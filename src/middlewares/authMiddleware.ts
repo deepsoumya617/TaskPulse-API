@@ -4,11 +4,11 @@ import { User } from '../models/userModel'
 
 type AuthRequest = Request & { user?: { userId: string } }
 
-export const authMiddleWare = async (
+export async function authMiddleWare(
   req: AuthRequest,
   res: Response,
   next: NextFunction
-) => {
+) {
   const token = req.headers.authorization?.split(' ')[1]
   if (!token) {
     return res
