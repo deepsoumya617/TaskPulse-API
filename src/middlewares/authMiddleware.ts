@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
 import { User } from '../models/userModel'
 
-type AuthRequest = Request & { user?: { userId: string } }
+export type AuthRequest = Request & { user?: { userId: string } }
 
 export async function authMiddleWare(
   req: AuthRequest,
