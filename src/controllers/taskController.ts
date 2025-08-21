@@ -94,3 +94,26 @@ export async function getTaskById(req: AuthRequest, res: Response) {
     return res.status(500).json({ message: 'Internal server error' })
   }
 }
+
+// delete task
+export async function deleteTask(req: AuthRequest, res: Response) {
+  const { id } = req.params
+  const userId = req.user!.userId
+
+  try {
+    const deletedTask = await Task.findOneAndDelete({ _id: id, user: userId })
+
+    // unautorized or wrong id or task deleted
+    if (!deletedTask) {
+      return res.status(404).json({ message: 'Task not found or unauthorized' })
+    }
+
+    res.status(200).json({
+      message: 'Task deleted successfully!',
+      deletedTask,
+    })
+  } catch (error) {
+    console.error('Error deleting task by id:', error)
+    return res.status(500).json({ message: 'Internal server error' })
+  }
+}

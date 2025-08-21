@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import {
   createTask,
+  deleteTask,
   getAllTasks,
   getTaskById,
   updateTask,
@@ -16,9 +17,12 @@ taskRouter.get('/', authMiddleWare, getAllTasks)
 taskRouter.post('/create-task', authMiddleWare, createTask)
 
 // update task by id
-taskRouter.post('/:id', authMiddleWare, updateTask)
+taskRouter.put('/:id', authMiddleWare, updateTask)
 
 // get task by id
 taskRouter.get('/:id', authMiddleWare, getTaskById)
+
+// delete task by id
+taskRouter.delete('/:id', authMiddleWare, deleteTask)
 
 export default taskRouter
