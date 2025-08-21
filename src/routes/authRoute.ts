@@ -1,5 +1,9 @@
 import { Router } from 'express'
-import { registerUser, verifyEmail } from '../controllers/authController'
+import {
+  loginUser,
+  registerUser,
+  verifyEmail,
+} from '../controllers/authController'
 
 const authRouter = Router()
 
@@ -8,5 +12,8 @@ authRouter.post('/register', registerUser)
 
 // Email verification route
 authRouter.get('/verify-email', verifyEmail)
+
+// login
+authRouter.post('/login', loginUser)
 
 export default authRouter

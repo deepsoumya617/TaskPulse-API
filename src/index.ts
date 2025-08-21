@@ -1,7 +1,7 @@
 import express, { Express, Request, Response } from 'express'
 import dotenv from 'dotenv'
 import mongoose from 'mongoose'
-import authRouter from './routes/auth'
+import authRouter from './routes/authRoute'
 
 // Load environment variables from .env file
 dotenv.config()
