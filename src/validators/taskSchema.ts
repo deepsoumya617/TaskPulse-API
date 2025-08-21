@@ -13,3 +13,21 @@ export const createTaskSchema = z.object({
 
   status: z.enum(['pending', 'in-progress', 'completed']).default('pending'),
 })
+
+export const updateTaskSchema = z.object({
+  title: z
+    .string()
+    .min(5, 'Title is required.')
+    .max(100, 'Title must be less than 100 characters')
+    .optional(),
+
+  description: z
+    .string()
+    .max(500, 'Description must be less than 500 characters')
+    .optional(),
+
+  status: z
+    .enum(['pending', 'in-progress', 'completed'])
+    .default('pending')
+    .optional(),
+})

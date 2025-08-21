@@ -1,24 +1,18 @@
 import { Request, Response } from 'express'
 import { Task } from '../models/taskModel'
 import { AuthRequest } from '../middlewares/authMiddleware'
-import { createTaskSchema } from '../validators/taskSchema'
+import { createTaskSchema, updateTaskSchema } from '../validators/taskSchema'
 
 // create task
 export async function createTask(req: AuthRequest, res: Response) {
   const { title, description } = createTaskSchema.parse(req.body)
-
-  // validate user
-  const userId = req.user?.userId
-  if (!userId) {
-    return res.status(401).json({ message: 'Unauthorized' })
-  }
 
   try {
     // save task
     const newTask = new Task({
       title,
       description,
-      user: userId,
+      user: req.user!.userId,
     })
     await newTask.save()
 
@@ -35,6 +29,48 @@ export async function createTask(req: AuthRequest, res: Response) {
     })
   } catch (error) {
     console.error('Error creating task:', error)
+    return res.status(500).json({ message: 'Internal server error' })
+  }
+}
+
+// Get all task for a user
+export async function getAllTasks(req: AuthRequest, res: Response) {
+  try {
+    // find all tasks based on the user id
+    const allTasks = await Task.find({ user: req.user!.userId })
+
+    res.status(200).json(allTasks)
+  } catch (error) {
+    console.error('Error getting all tasks:', error)
+    return res.status(500).json({ message: 'Internal server error' })
+  }
+}
+
+// update task
+export async function updateTask(req: AuthRequest, res: Response) {
+  const { title, description, status } = updateTaskSchema.parse(req.body)
+  const { id } = req.params
+  const userId = req.user!.userId
+
+  try {
+    // find task by id and update
+    const updatedTask = await Task.findOneAndUpdate(
+      { _id: id, user: userId },
+      { title, description, status },
+      { new: true, runValidators: true }
+    )
+
+    // unautorized or wrong id or task deleted
+    if (!updatedTask) {
+      return res.status(404).json({ message: 'Task not found or unauthorized' })
+    }
+
+    res.status(200).json({
+      message: 'Task updated successfully!',
+      updatedTask,
+    })
+  } catch (error) {
+    console.error('Error updating task:', error)
     return res.status(500).json({ message: 'Internal server error' })
   }
 }
