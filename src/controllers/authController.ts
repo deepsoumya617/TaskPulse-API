@@ -4,11 +4,12 @@ import jwt from 'jsonwebtoken'
 import { User } from '../models/userModel'
 import { sendEmail } from '../services/emailService'
 import {
+  forgotPasswordSchema,
   loginSchema,
   registerSchema,
-  verifyEmailSchema,
+  resetPasswordSchema,
+  tokenSchema,
 } from '../validators/authSchema'
-
 
 // Register a new user
 export async function registerUser(req: Request, res: Response) {
@@ -66,7 +67,7 @@ export async function registerUser(req: Request, res: Response) {
 // Verify user email
 export async function verifyEmail(req: Request, res: Response) {
   // validate token
-  const { token } = verifyEmailSchema.parse(req.query)
+  const { token } = tokenSchema.parse(req.query)
   try {
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET!) as {
       email: string
@@ -144,6 +145,73 @@ export async function loginUser(req: Request, res: Response) {
     })
   } catch (error) {
     console.error('Login error:', error)
+    res.status(500).json({ message: 'Internal server error' })
+  }
+}
+
+// forgot password
+export async function forgotPassword(req: Request, res: Response) {
+  const { email } = forgotPasswordSchema.parse(req.body)
+
+  try {
+    // find user by email
+    const user = await User.findOne({ email })
+    if (!user) {
+      return res.status(400).json({ message: 'User does not exist!' })
+    }
+
+    // generate reset token
+    const resetToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET!, {
+      expiresIn: '10m',
+    })
+
+    // send reset email
+    const resetUrl = `${process.env.APP_URL}/auth/reset-password?token=${resetToken}`
+    await sendEmail(
+      email,
+      'Reset Password - TaskPulse',
+      `To reset your password, please click on the following link: ${resetUrl}`
+    )
+
+    // send response
+    res.status(200).json({
+      message: 'Reset password email sent successfully',
+    })
+  } catch (error) {
+    console.error('Forgot password error:', error)
+    res.status(500).json({ message: 'Internal server error' })
+  }
+}
+
+// reset password
+export async function resetPassword(req: Request, res: Response) {
+  const { token } = tokenSchema.parse(req.query)
+  const { newPassword } = resetPasswordSchema.parse(req.body)
+
+  try {
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET!) as {
+      userId: string
+    }
+
+    // find user by id
+    const user = await User.findById(decodedToken.userId)
+    if (!user) {
+      return res.status(400).json({
+        message: 'User doesnt exist!',
+      })
+    }
+
+    // update password
+    const hashedPassword = await bcrypt.hash(newPassword, 10)
+    user.password = hashedPassword
+    await user.save()
+
+    // send response
+    res.status(201).json({
+      message: 'Password updated successfully!',
+    })
+  } catch (error) {
+    console.error('Reset password error:', error)
     res.status(500).json({ message: 'Internal server error' })
   }
 }

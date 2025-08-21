@@ -1,7 +1,9 @@
 import { Router } from 'express'
 import {
+  forgotPassword,
   loginUser,
   registerUser,
+  resetPassword,
   verifyEmail,
 } from '../controllers/authController'
 
@@ -15,5 +17,11 @@ authRouter.get('/verify-email', verifyEmail)
 
 // login
 authRouter.post('/login', loginUser)
+
+// Forgot password route
+authRouter.post('/forgot-password', forgotPassword)
+
+// reset password
+authRouter.post('/reset-password', resetPassword)
 
 export default authRouter
