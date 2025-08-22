@@ -40,7 +40,7 @@ export async function registerUser(req: Request, res: Response) {
     user.save()
 
     // send verification email
-    const verificationUrl = `${process.env.APP_URL}/auth/verify-email?token=${verificationToken}`
+    const verificationUrl = `${process.env.APP_URL_PROD}/auth/verify-email?token=${verificationToken}`
     await sendEmail(
       email,
       'Verify Email - TaskPulse',
@@ -166,7 +166,7 @@ export async function forgotPassword(req: Request, res: Response) {
     })
 
     // send reset email
-    const resetUrl = `${process.env.APP_URL}/auth/reset-password?token=${resetToken}`
+    const resetUrl = `${process.env.APP_URL_PROD}/auth/reset-password?token=${resetToken}`
     await sendEmail(
       email,
       'Reset Password - TaskPulse',
