@@ -1,7 +1,6 @@
 import express, { Express, Request, Response } from 'express';
 import authRouter from './routes/authRoute';
 import taskRouter from './routes/taskRoute';
-import { uptime } from 'process';
 
 const app: Express = express();
 
@@ -20,7 +19,7 @@ app.get('/health', (req: Request, res: Response) => {
   res.json({
     status: 'ok',
     message: 'Api is running fine!',
-    uptime,
+    uptime: process.uptime(),
   });
 });
 

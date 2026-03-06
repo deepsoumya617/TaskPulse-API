@@ -12,6 +12,12 @@ export default defineConfig([
     extends: ['js/recommended'],
     languageOptions: { globals: globals.node },
   },
+  {
+    files: ['src/__tests__/**/*.ts'],
+    languageOptions: {
+      globals: globals.jest,
+    },
+  },
   tseslint.configs.recommended,
   {
     rules: {
