@@ -1,13 +1,13 @@
-import mongoose, { Schema, Document } from 'mongoose'
+import mongoose, { Schema, Document } from 'mongoose';
 
 type UserType = Document & {
-  email: string
-  password: string
-  name: string
-  isVerified: boolean
-  verificationToken?: string
-  createdAt: Date
-}
+  email: string;
+  password: string;
+  name: string;
+  isVerified: boolean;
+  verificationToken?: string;
+  createdAt: Date;
+};
 
 const userSchema = new Schema<UserType>({
   email: {
@@ -24,7 +24,7 @@ const userSchema = new Schema<UserType>({
     type: String,
     required: true,
   },
-  isVerified: { 
+  isVerified: {
     type: Boolean,
     default: false,
   },
@@ -33,6 +33,6 @@ const userSchema = new Schema<UserType>({
     type: Date,
     default: Date.now,
   },
-})
+});
 
-export const User = mongoose.model<UserType>('User', userSchema)
+export const User = mongoose.model<UserType>('User', userSchema);

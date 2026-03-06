@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
 export const createTaskSchema = z.object({
   title: z
@@ -12,7 +12,7 @@ export const createTaskSchema = z.object({
     .optional(),
 
   status: z.enum(['pending', 'in-progress', 'completed']).default('pending'),
-})
+});
 
 export const updateTaskSchema = z.object({
   title: z
@@ -30,4 +30,4 @@ export const updateTaskSchema = z.object({
     .enum(['pending', 'in-progress', 'completed'])
     .default('pending')
     .optional(),
-})
+});

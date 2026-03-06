@@ -1,11 +1,11 @@
-import mongoose, { Schema, Document } from 'mongoose'
+import mongoose, { Schema, Document } from 'mongoose';
 
 type taskType = Document & {
-  title: string
-  description?: string
-  status: string
-  user: mongoose.Schema.Types.ObjectId
-}
+  title: string;
+  description?: string;
+  status: string;
+  user: mongoose.Schema.Types.ObjectId;
+};
 
 const taskSchema = new Schema<taskType>(
   {
@@ -26,6 +26,6 @@ const taskSchema = new Schema<taskType>(
     },
   },
   { timestamps: true }
-)
+);
 
-export const Task = mongoose.model<taskType>('Task', taskSchema)
+export const Task = mongoose.model<taskType>('Task', taskSchema);

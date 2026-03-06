@@ -1,27 +1,27 @@
-import { Router } from 'express'
+import { Router } from 'express';
 import {
   forgotPassword,
   loginUser,
   registerUser,
   resetPassword,
   verifyEmail,
-} from '../controllers/authController'
+} from '../controllers/authController';
 
-const authRouter = Router()
+const authRouter = Router();
 
 // Register route
-authRouter.post('/register', registerUser)
+authRouter.post('/register', registerUser);
 
 // Email verification route
-authRouter.get('/verify-email', verifyEmail)
+authRouter.get('/verify-email', verifyEmail);
 
 // login
-authRouter.post('/login', loginUser)
+authRouter.post('/login', loginUser);
 
 // Forgot password route
-authRouter.post('/forgot-password', forgotPassword)
+authRouter.post('/forgot-password', forgotPassword);
 
 // reset password
-authRouter.post('/reset-password', resetPassword)
+authRouter.post('/reset-password', resetPassword);
 
-export default authRouter
+export default authRouter;
