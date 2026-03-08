@@ -1,3 +1,5 @@
+/// <reference types="jest" />
+
 import jwt from 'jsonwebtoken';
 import request from 'supertest';
 import app from '../app';
