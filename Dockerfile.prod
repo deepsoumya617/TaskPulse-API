@@ -1,0 +1,41 @@
+# multi stage build
+# cache dependencies
+FROM node:24.14.0-alpine AS deps
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci --omit=dev && npm cache clean --force
+
+# build stage
+FROM node:24.14.0-alpine AS builder
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci
+
+COPY . .
+
+RUN npm run build
+
+# runner stage -> final stage -> only this is shipped
+FROM node:24.14.0-alpine AS runner
+WORKDIR /app
+
+# apk -> alpine package manager
+RUN apk add --no-cache dumb-init
+
+# create non-root user
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 meow
+
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/package.json ./package.json
+
+RUN chown -R meow:nodejs /app
+USER meow
+
+EXPOSE 8080
+
+ENTRYPOINT ["dumb-init", "--"]
+CMD ["node", "dist/index.js"]

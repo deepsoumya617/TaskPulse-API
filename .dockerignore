@@ -2,4 +2,10 @@
 .gitignore
 node_modules
 .dockerignore
+Dockerfile
 .env
+__tests__
+src/__tests__
+dist
+build
+README.md
