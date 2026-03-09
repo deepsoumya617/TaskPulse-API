@@ -34,6 +34,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
+          file: ./Dockerfile.prod
           push: true
           tags: |
             ${{ env.DOCKER_IMAGE }}:${{ github.sha }}
@@ -56,14 +57,14 @@ jobs:
           key: ${{ secrets.EC2_KEY }}
           script: |
             echo "Starting deployment"
-                  
+
             cd ~/app
-                  
+
             echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
-                  
+
             docker compose pull
             docker compose up -d
-                  
+
             docker image prune -f
-                  
+
             echo "Deployment successful"
